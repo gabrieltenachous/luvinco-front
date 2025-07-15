@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCartStore } from '@/stores/cartStore'
 import Header from '@/sections/Header.vue'
 import { useProductController } from '@/controller/productController'
 import type { ProductFilter } from '@/interfaces/ProductFilter'
@@ -6,8 +7,9 @@ import ProductCard from '@/components/ProductCard.vue'
 import type { Product } from '@/interfaces/Product'
 
 const { products, isLoading, error, loadProducts } = useProductController()
+const cart = useCartStore();
 
-loadProducts() // carregar sem filtro ao montar
+loadProducts() 
 
 function onFilter(filters: ProductFilter) {
   loadProducts(filters)
@@ -15,8 +17,7 @@ function onFilter(filters: ProductFilter) {
 
 
 function onAddToCart(product: Product) {
-  console.log('Adicionar ao carrinho:', product)
-  // Em breve: chamar orderService
+  cart.addToCart(product)
 }
 </script>
 
