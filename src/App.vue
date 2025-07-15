@@ -1,30 +1,33 @@
+<!-- App.vue -->
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+// Nenhuma lógica necessária para o teste
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="min-h-screen flex flex-col items-center justify-center gap-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
+    <h1 class="text-4xl font-extrabold drop-shadow-lg">
+      Tailwind está funcionando! 🎉
+    </h1>
+
+    <button
+      class="px-6 py-3 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md transition
+             ring-1 ring-white/50 shadow-lg"
+    >
+      Botão de teste
+    </button>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="h-16 w-16 bg-emerald-400 rounded-lg animate-bounce"></div>
+      <div class="h-16 w-16 bg-yellow-400 rounded-lg animate-spin-slow"></div>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* Animação customizada só para destacar ainda mais */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+.animate-spin-slow { animation: spin-slow 4s linear infinite; }
 </style>
