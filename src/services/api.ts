@@ -19,4 +19,15 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 403) {
+      console.warn('Token inválido ou ausente.');
+    }
+
+    return Promise.reject(error)
+  }
+)
+
 export default api
