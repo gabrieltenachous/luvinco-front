@@ -1,13 +1,14 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import type { Product } from '@/interfaces/Product'
 import { fetchProducts } from '@/services/productService'
+import type { ProductFilter } from '@/interfaces/ProductFilter'
 
 export function useProductController() {
   const products = ref<Product[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
-  async function loadProducts(filters = {}) {
+  async function loadProducts(filters: ProductFilter = {}) {
     isLoading.value = true
     error.value = null
 
@@ -21,14 +22,10 @@ export function useProductController() {
     }
   }
 
-  onMounted(() => {
-    loadProducts()
-  })
-
   return {
     products,
     isLoading,
     error,
-    loadProducts
+    loadProducts,
   }
 }
