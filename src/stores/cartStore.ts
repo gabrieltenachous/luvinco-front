@@ -1,14 +1,14 @@
-import { defineStore } from 'pinia'
-import type { Product } from '@/interfaces/Product'
+import { defineStore } from "pinia";
+import type { Product } from "@/interfaces/Product";
 
 export interface CartItem {
-  product: Product
-  quantity: number
+  product: Product;
+  quantity: number;
 }
 
-export const useCartStore = defineStore('cart', {
+export const useCartStore = defineStore("cart", {
   state: () => ({
-    items: [] as CartItem[]
+    items: [] as CartItem[],
   }),
 
   getters: {
@@ -18,17 +18,31 @@ export const useCartStore = defineStore('cart', {
 
   actions: {
     addToCart(product: Product) {
-      const existing = this.items.find((item) => item.product.id === product.id)
+      const existing = this.items.find(
+        (item) => item.product.id === product.id
+      );
 
       if (existing) {
-        existing.quantity++
+        existing.quantity++;
       } else {
-        this.items.push({ product, quantity: 1 })
+        this.items.push({ product, quantity: 1 });
+      }
+    },
+
+    removeFromCart(productId: string) {
+      const index = this.items.findIndex((i) => i.product.id === productId);
+      if (index !== -1) {
+        const item = this.items[index];
+        if (item.quantity > 1) { 
+          this.items[index] = { ...item, quantity: item.quantity - 1 };
+        } else { 
+          this.items.splice(index, 1);
+        }
       }
     },
 
     clearCart() {
-      this.items = []
-    }
-  }
-})
+      this.items = [];
+    },
+  },
+});
