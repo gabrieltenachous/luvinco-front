@@ -1,13 +1,7 @@
 <template>
-  <div
-    v-if="visible"
-    class="fixed inset-0 z-50 bg-black/50 flex justify-center items-center px-4"
-  >
+  <div v-if="props.visible" class="fixed inset-0 z-50 bg-black/50 flex justify-center items-center px-4">
     <div class="bg-white max-w-md w-full rounded-lg shadow-lg p-6 relative">
-      <button
-        class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
-        @click="close"
-      >
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl" @click="close">
         &times;
       </button>
 
@@ -40,9 +34,16 @@
         </div>
       </div>
 
-      <div class="mt-4 flex justify-end">
+      <div class="mt-4 flex justify-between gap-2">
         <button
-          class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700"
+          class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 flex-1"
+          @click="onCheckout"
+          :disabled="isFinalizing"
+        >
+          {{ isFinalizing ? 'Finalizando...' : 'Finalizar pedido' }}
+        </button>
+        <button
+          class="bg-gray-300 text-black text-sm px-4 py-2 rounded hover:bg-gray-400 flex-1"
           @click="close"
         >
           Fechar
@@ -53,14 +54,52 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, watch } from 'vue'
+import Swal from 'sweetalert2'
 import { useCartStore } from '@/stores/cartStore'
+import { useOrderController } from '@/controller/orderController'
+import { useOrderProductController } from '@/controller/orderProductController'
 
-defineProps<{ visible: boolean }>()
+const props = defineProps<{ visible: boolean }>()
 const emit = defineEmits(['close'])
 
 const cart = useCartStore()
+const { order, loadCart } = useOrderController()
+const { finishOrder, isFinalizing } = useOrderProductController()
+
+// Carregar carrinho sempre que modal for aberto
+onMounted(() => {
+  if (props.visible) loadCart()
+})
+
+watch(() => props.visible, (open) => {
+  if (open) loadCart()
+})
 
 function close() {
   emit('close')
+}
+
+async function onCheckout() {
+  if (!order.value?.id) return
+
+  try {
+    const result = await finishOrder(order.value.id)
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Pedido Finalizado!',
+      text: `Entrega prevista para: ${new Date(result.entrega).toLocaleString('pt-BR')}`,
+    })
+
+    await loadCart()
+    emit('close')
+  } catch {
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'Falha ao finalizar pedido. Tente novamente.',
+    })
+  }
 }
 </script>

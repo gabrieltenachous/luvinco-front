@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import type { Product } from "@/interfaces/Product";
+import type { OrderProduct } from "@/interfaces/OrderProduct";
 
 export interface CartItem {
   product: Product;
@@ -28,7 +29,12 @@ export const useCartStore = defineStore("cart", {
         this.items.push({ product, quantity: 1 });
       }
     },
-
+    setFromApi(orderProducts: OrderProduct[]) {
+      this.items = orderProducts.map(op => ({
+        product: op.product,
+        quantity: op.quantity
+      }))
+    },
     removeFromCart(productId: string) {
       const index = this.items.findIndex((i) => i.product.id === productId);
       if (index !== -1) {

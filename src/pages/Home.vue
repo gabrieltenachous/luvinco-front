@@ -5,10 +5,18 @@ import { useProductController } from '@/controller/productController'
 import type { ProductFilter } from '@/interfaces/ProductFilter'
 import ProductCard from '@/components/ProductCard.vue'
 import type { Product } from '@/interfaces/Product'
+import { useOrderController } from '@/controller/orderController'
+import type { OrderItem } from '@/interfaces/OrderItem'
+import { onMounted } from 'vue'
 
 const { products, isLoading, error, loadProducts } = useProductController()
 const cart = useCartStore();
+const { sendToCart, loadCart } = useOrderController() 
 
+onMounted(() => {
+  loadProducts()
+  loadCart() // <- garante sincronização do backend no reload
+})
 loadProducts() 
 
 function onFilter(filters: ProductFilter) {
@@ -16,8 +24,22 @@ function onFilter(filters: ProductFilter) {
 }
 
 
-function onAddToCart(product: Product) {
+async function onAddToCart(product: Product) {
   cart.addToCart(product)
+
+  const items: OrderItem[] = [
+    {
+      product_id: product.product_id,
+      quantity: 1,
+    }
+  ]
+
+  try {
+    await sendToCart(items, false)
+    console.log('Produto enviado para o carrinho no backend')
+  } catch (err) {
+    console.error('Erro ao sincronizar carrinho com API', err)
+  }
 }
 </script>
 
