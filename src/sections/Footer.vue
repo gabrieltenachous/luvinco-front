@@ -7,9 +7,15 @@
         {{ cart.totalQuantity }} item{{ cart.totalQuantity === 1 ? '' : 's' }} no carrinho
       </span>
 
-      <button class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700" @click="isModalOpen = true">
-        Ver carrinho
-      </button>
+      <div class="flex gap-2">
+        <button class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700" @click="isModalOpen = true">
+          Ver carrinho
+        </button>
+
+        <RouterLink to="/completed" class="bg-gray-800 text-white text-sm px-4 py-2 rounded hover:bg-gray-900">
+          Pedidos Finalizados
+        </RouterLink>
+      </div>
     </div>
   </footer>
 

@@ -25,3 +25,8 @@ export async function getOrderHistory(): Promise<OrderHistory[]> {
   const response = await api.get('/order-products')
   return response.data.data as OrderHistory[]
 }
+
+export async function getCompletedOrders(): Promise<OrderHistory[]> {
+  const response = await api.get('/orders/completed')
+  return response.data.data as OrderHistory[]
+}
