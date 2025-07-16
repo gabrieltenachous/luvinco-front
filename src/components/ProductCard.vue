@@ -1,6 +1,7 @@
 <template>
   <div class="bg-white rounded-xl shadow p-4 flex flex-col justify-between h-full">
-    <img :src="product.image_url" :alt="product.name" class="w-full h-40 object-contain mb-3" @error="onImageError" />
+    <img :src="imageSrc" :alt="product.name" class="w-full h-40 object-contain mb-3" @error="onImageError" />
+
 
     <div class="flex-1">
       <h2 class="text-lg font-semibold truncate">{{ product.name }}</h2>
@@ -36,9 +37,10 @@
 <script setup lang="ts">
 import type { Product } from '@/interfaces/Product'
 import { useCartStore } from '@/stores/cartStore'
-import { computed } from 'vue'
-
+import { computed, ref } from 'vue'
+ 
 const props = defineProps<{ product: Product }>()
+const imageSrc = ref(props.product.image_url)
 const cart = useCartStore()
 
 const quantidadeNoCarrinho = computed(() => {
@@ -49,8 +51,7 @@ const estoqueRestante = computed(() => {
   return props.product.stock - quantidadeNoCarrinho.value
 })
 
-function onImageError(event: Event) {
-  const target = event.target as HTMLImageElement
-  target.src = 'https://placehold.co/600x400?text=Imagem+Indisponível'
+function onImageError() {
+  imageSrc.value = 'https://placehold.co/600x400?text=Imagem+Indisponível'
 }
 </script>

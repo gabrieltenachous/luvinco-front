@@ -41,11 +41,10 @@
 
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
-import Swal from 'sweetalert2'
 import { useCartStore } from '@/stores/cartStore'
 import { useOrderController } from '@/controller/orderController'
 import { useOrderProductController } from '@/controller/orderProductController'
-import { formatDateBrazil, showError, showSuccess } from '@/services/external'
+import { formatDateBrazil, showError, showSuccess } from '@/utils/external'
 
 const props = defineProps<{ visible: boolean }>()
 const emit = defineEmits(['close'])
