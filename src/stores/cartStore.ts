@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import type { Product } from "@/interfaces/Product";
 import type { OrderProduct } from "@/interfaces/OrderProduct";
+import { useOrderController } from "@/controller/orderController";
+const { sendToCart } = useOrderController();
 
 export interface CartItem {
   product: Product;
@@ -30,21 +32,28 @@ export const useCartStore = defineStore("cart", {
       }
     },
     setFromApi(orderProducts: OrderProduct[]) {
-      this.items = orderProducts.map(op => ({
+      this.items = orderProducts.map((op) => ({
         product: op.product,
-        quantity: op.quantity
-      }))
+        quantity: op.quantity,
+      }));
     },
-    removeFromCart(productId: string) {
-      const index = this.items.findIndex((i) => i.product.id === productId);
-      if (index !== -1) {
-        const item = this.items[index];
-        if (item.quantity > 1) { 
-          this.items[index] = { ...item, quantity: item.quantity - 1 };
-        } else { 
-          this.items.splice(index, 1);
-        }
+    async removeFromCart(productId: string) {
+      const item = this.items.find((i) => i.product.id === productId);
+      if (!item) return;
+
+      if (item.quantity > 1) {
+        item.quantity--;
+      } else {
+        this.items = this.items.filter((i) => i.product.id !== productId);
       }
+
+      // Sync com back-end
+      await sendToCart([
+        {
+          product_id: item.product.product_id,
+          quantity: -1, // nova lógica de subtração
+        },
+      ]);
     },
 
     clearCart() {

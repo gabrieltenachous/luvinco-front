@@ -94,12 +94,17 @@ async function onCheckout() {
 
     await loadCart()
     emit('close')
-  } catch {
+  } catch (err: any) {
+    const message = err.response?.data?.message || 'Erro inesperado.'
+
+    const isIntegrationFailure = err.response?.status === 500
+
     Swal.fire({
       icon: 'error',
-      title: 'Erro',
-      text: 'Falha ao finalizar pedido. Tente novamente.',
+      title: isIntegrationFailure ? 'Falha na integração externa' : 'Erro',
+      text: message,
     })
   }
 }
+
 </script>
