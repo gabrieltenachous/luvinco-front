@@ -1,82 +1,72 @@
+### ▶️ Rodando com Docker
 
-### 📄 Seção 1: **Autenticação via Token**
+#### 1. Pré-requisitos
 
-```md
-## 🔐 Autenticação por Token
+* Docker e Docker Compose instalados
+* Backend rodando em `http://localhost:8000`
+* Token de autenticação válido (verifique `.env`)
 
-Todas as chamadas à API requerem o seguinte header:
+#### 2. Build do container
 
+```bash
+docker compose build
 ```
 
-Authorization: wQ8ehU2x4gj93CH9lMTnelQO3GcFvLzyqn8Fj3WA0ffQy57I60
-Accept: application/json
-Content-Type: application/json
+#### 3. Subir o front-end
 
+```bash
+docker compose up
 ```
 
-Esse token é validado automaticamente pelo middleware global `EnsureTokenIsValid`.
+O projeto estará disponível em:
+
+```
+http://localhost:5173
+```
+
+#### 4. Parar o container
+
+```bash
+docker compose down
 ```
 
 ---
 
-### 📄 Seção 2: **Exemplo de requisição – Finalização de Pedido**
+## 🧭 Estrutura de Rotas
 
-```md
-## ✅ Exemplo de Finalização de Pedido
-
-Endpoint:
-
-```
-
-POST /api/order-products
-
-````
-
-Payload esperado:
-
-```json
+```ts
 {
-  "order_id": "019809f8-61c1-7252-853b-58c0432fce2a"
-}
-````
-
-Resposta de sucesso (`200`):
-
-```json
-{
-  "message": "Pedido finalizado com sucesso.",
-  "data": {
-    "mensagem": "Pedido criado com sucesso.",
-    "entrega": "2025-07-15T20:47:01Z",
-    "pedido": [ ... ]
-  }
+  path: '/',
+  component: DefaultLayout,
+  children: [
+    { path: '', name: 'home', component: Home },
+    { path: 'checkout', name: 'checkout', component: Checkout },
+    { path: 'history', name: 'history', component: History },
+    { path: 'completed', name: 'completed', component: CompletedOrders },
+  ]
 }
 ```
 
-Resposta de erro (`500` – falha de integração externa):
-
-```json
-{
-  "message": "Erro ao integrar com o sistema externo. Nenhuma alteração foi salva."
-}
-```
-
-````
+| Rota         | Componente            | Descrição                                                              |
+| ------------ | --------------------- | ---------------------------------------------------------------------- |
+| `/`          | `Home.vue`            | Página inicial com vitrine de produtos e filtros                       |
+| `/checkout`  | `Checkout.vue`        | Tela de finalização de pedido                                          |
+| `/history`   | `History.vue`         | Histórico de pedidos realizados                                        |
+| `/completed` | `CompletedOrders.vue` | Listagem de pedidos concluídos paginados (GET `/api/orders/completed`) |
 
 ---
 
-### 📄 Seção 3: **Fluxo completo do checkout**
+## 🛠️ Tech Stack
 
-```md
-## 🛒 Fluxo completo de Checkout (Front-end)
+* Vue 3 + TypeScript
+* Pinia (gerenciamento de estado)
+* Vue Router (roteamento)
+* TailwindCSS (estilização)
+* Axios (requisições HTTP)
+* SweetAlert2 (feedbacks visuais)
+* Vite (dev server e build)
+* Docker (ambiente isolado)
 
-1. O usuário clica em **"Adicionar"** → chama `POST /api/orders`
-2. Os produtos são exibidos no **modal de carrinho**
-3. Ao clicar em **"Finalizar pedido"**:
-   - Envia `POST /api/order-products`
-   - Se for sucesso: mostra `SweetAlert` com data estimada de entrega
-   - Se falhar (500): exibe alerta amigável com o erro retornado
-4. Após finalização:
-   - Carrinho é limpo
-   - Pedido é movido para o histórico
-````
+---
+
+Se quiser que o `.env` de exemplo, `docker-compose.yml` e `Dockerfile` também entrem aqui, posso expandir. Deseja isso?
