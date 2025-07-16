@@ -79,7 +79,6 @@ watch(() => props.visible, (open) => {
 function close() {
   emit('close')
 }
-
 async function onCheckout() {
   if (!order.value?.id) return
 
@@ -88,23 +87,29 @@ async function onCheckout() {
 
     Swal.fire({
       icon: 'success',
-      title: 'Pedido Finalizado!',
-      text: `Entrega prevista para: ${new Date(result.entrega).toLocaleString('pt-BR')}`,
+      title: result.mensagem || 'Pedido Finalizado!',
+      html: `
+        <p class="mb-2">Seu pedido foi enviado com sucesso.</p>
+        <b>Entrega prevista:</b><br />
+        ${new Date(result.entrega).toLocaleString('pt-BR')}
+      `,
+      confirmButtonText: 'Fechar',
     })
 
     await loadCart()
+    cart.clearCart()
+    order.value = null;
     emit('close')
   } catch (err: any) {
     const message = err.response?.data?.message || 'Erro inesperado.'
 
-    const isIntegrationFailure = err.response?.status === 500
-
     Swal.fire({
       icon: 'error',
-      title: isIntegrationFailure ? 'Falha na integração externa' : 'Erro',
+      title: 'Erro ao finalizar pedido',
       text: message,
     })
   }
 }
+
 
 </script>
