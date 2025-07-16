@@ -12,16 +12,8 @@
       </div>
 
       <div v-else class="space-y-4 max-h-80 overflow-y-auto">
-        <div
-          v-for="item in cart.items"
-          :key="item.product.id"
-          class="flex items-center gap-4"
-        >
-          <img
-            :src="item.product.image_url"
-            alt=""
-            class="w-16 h-16 object-contain border rounded"
-          />
+        <div v-for="item in cart.items" :key="item.product.id" class="flex items-center gap-4">
+          <img :src="item.product.image_url" alt="" class="w-16 h-16 object-contain border rounded" />
           <div class="flex-1">
             <h3 class="font-semibold text-sm">{{ item.product.name }}</h3>
             <p class="text-xs text-gray-500">
@@ -35,17 +27,11 @@
       </div>
 
       <div class="mt-4 flex justify-between gap-2">
-        <button
-          class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 flex-1"
-          @click="onCheckout"
-          :disabled="isFinalizing"
-        >
+        <button class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 flex-1" @click="onCheckout"
+          :disabled="isFinalizing">
           {{ isFinalizing ? 'Finalizando...' : 'Finalizar pedido' }}
         </button>
-        <button
-          class="bg-gray-300 text-black text-sm px-4 py-2 rounded hover:bg-gray-400 flex-1"
-          @click="close"
-        >
+        <button class="bg-gray-300 text-black text-sm px-4 py-2 rounded hover:bg-gray-400 flex-1" @click="close">
           Fechar
         </button>
       </div>
@@ -59,6 +45,7 @@ import Swal from 'sweetalert2'
 import { useCartStore } from '@/stores/cartStore'
 import { useOrderController } from '@/controller/orderController'
 import { useOrderProductController } from '@/controller/orderProductController'
+import { formatDateBrazil, showError, showSuccess } from '@/services/external'
 
 const props = defineProps<{ visible: boolean }>()
 const emit = defineEmits(['close'])
@@ -84,31 +71,18 @@ async function onCheckout() {
 
   try {
     const result = await finishOrder(order.value.id)
-
-    Swal.fire({
-      icon: 'success',
-      title: result.mensagem || 'Pedido Finalizado!',
-      html: `
-        <p class="mb-2">Seu pedido foi enviado com sucesso.</p>
-        <b>Entrega prevista:</b><br />
-        ${new Date(result.entrega).toLocaleString('pt-BR')}
-      `,
-      confirmButtonText: 'Fechar',
-    })
-
+    showSuccess('Pedido Finalizado!', `Entrega prevista: ${formatDateBrazil(result.entrega)}`)
     await loadCart()
     cart.clearCart()
     order.value = null;
     emit('close')
   } catch (err: any) {
-    const message = err.response?.data?.message || 'Erro inesperado.'
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Erro ao finalizar pedido',
-      text: message,
-    })
+    showApiError(err);
   }
+}
+function showApiError(err: any) {
+  const message = (err as any)?.response?.data?.message || 'Erro inesperado.'
+  showError(message)
 }
 
 

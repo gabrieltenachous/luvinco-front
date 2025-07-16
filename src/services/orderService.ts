@@ -1,4 +1,4 @@
-import api from './api'
+import api from '../config/api'
 import type { OrderItem } from '@/interfaces/OrderItem'
 import type { OrderProduct } from '@/interfaces/OrderProduct'
 

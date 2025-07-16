@@ -1,5 +1,5 @@
 import type { OrderProduct } from '@/interfaces/OrderProduct'
-import api from './api'
+import api from '../config/api'
 
 export interface OrderProductResponse {
   mensagem: string

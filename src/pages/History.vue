@@ -7,10 +7,15 @@
     <div v-else-if="history.length === 0" class="text-gray-400">Nenhum pedido finalizado.</div>
 
     <div v-else>
-      <div v-for="order in history" :key="order.id" class="mb-8 border rounded-lg overflow-hidden shadow">
+      <div
+        v-for="order in history"
+        :key="order.id"
+        class="mb-6 border rounded shadow-sm overflow-hidden"
+      >
         <div class="bg-gray-100 px-4 py-2 font-semibold text-sm">
           Pedido #{{ order.id }} • {{ order.order_products.length }} item(s)
         </div>
+
         <table class="w-full text-sm">
           <thead class="bg-gray-200">
             <tr>
@@ -41,6 +46,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { onMounted } from 'vue'

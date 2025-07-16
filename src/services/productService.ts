@@ -1,5 +1,5 @@
 import type { ProductFilter } from '@/interfaces/ProductFilter'
-import api from './api'
+import api from '../config/api'
 import type { Product } from '@/interfaces/Product'
  
 export async function fetchProducts(filters: ProductFilter = {}): Promise<Product[]> {
