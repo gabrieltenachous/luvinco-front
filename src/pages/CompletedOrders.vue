@@ -34,6 +34,22 @@
                     </tbody>
                 </table>
             </div>
+            <div v-if="meta && links" class="flex justify-center mt-6 gap-2">
+                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300" :disabled="page === 1"
+                    @click="loadCompletedOrders(page - 1)">
+                    ← Anterior
+                </button>
+
+                <span class="text-sm font-medium self-center">
+                    Página {{ meta.current_page }} de {{ meta.last_page }}
+                </span>
+
+                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300" :disabled="!links.next"
+                    @click="loadCompletedOrders(page + 1)">
+                    Próxima →
+                </button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -42,7 +58,7 @@
 import { onMounted } from 'vue'
 import { useCompletedOrdersController } from '@/controller/completedOrdersController'
 
-const { completed, isLoading, error, loadCompletedOrders } = useCompletedOrdersController()
+const { completed, isLoading, error, loadCompletedOrders,page,meta,links } = useCompletedOrdersController()
 
 onMounted(() => {
     loadCompletedOrders()
