@@ -72,8 +72,7 @@ docker-compose down
 
 | Rota         | Componente            | Descrição                                                              |
 | ------------ | --------------------- | ---------------------------------------------------------------------- |
-| `/`          | `Home.vue`            | Página inicial com vitrine de produtos e filtros                       |
-| `/checkout`  | `Checkout.vue`        | Tela de finalização de pedido                                          |
+| `/`          | `Home.vue`            | Página inicial com vitrine de produtos e filtros                       | 
 | `/history`   | `History.vue`         | Histórico de pedidos realizados                                        |
 | `/completed` | `CompletedOrders.vue` | Listagem de pedidos concluídos paginados (GET `/api/orders/completed`) |
 
