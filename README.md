@@ -1,21 +1,42 @@
-### ▶️ Rodando com Docker
 
-#### 1. Pré-requisitos
+## ▶️ Rodando com Docker
+
+### 1. Pré-requisitos
 
 * Docker e Docker Compose instalados
 * Backend rodando em `http://localhost:8000`
-* Token de autenticação válido (verifique `.env`)
+* Token de autenticação válido
 
-#### 2. Build do container
+> ⚠️ O arquivo `.env` **não está versionado** por segurança.
+> Crie um novo `.env` na raiz do projeto com base no `.env.example`:
 
 ```bash
-docker compose build
+cp .env.example .env
 ```
 
-#### 3. Subir o front-end
+O conteúdo do `.env.example`:
+
+```env
+VITE_API_URL=http://localhost:8000/api
+VITE_API_TOKEN=sua-chave-de-autenticacao-aqui
+```
+
+Substitua `sua-chave-de-autenticacao-aqui` pelo token de acesso da API.
+
+---
+
+### 2. Build do container
 
 ```bash
-docker compose up
+docker-compose build
+```
+
+---
+
+### 3. Subir o front-end
+
+```bash
+docker-compose up
 ```
 
 O projeto estará disponível em:
@@ -24,10 +45,12 @@ O projeto estará disponível em:
 http://localhost:5173
 ```
 
-#### 4. Parar o container
+---
+
+### 4. Parar o container
 
 ```bash
-docker compose down
+docker-compose down
 ```
 
 ---
@@ -68,5 +91,3 @@ docker compose down
 * Docker (ambiente isolado)
 
 ---
-
-Se quiser que o `.env` de exemplo, `docker-compose.yml` e `Dockerfile` também entrem aqui, posso expandir. Deseja isso?
