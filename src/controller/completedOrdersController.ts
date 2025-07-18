@@ -3,6 +3,7 @@ import { getCompletedOrders } from "@/services/orderProductService";
 import type { OrderHistory } from "@/services/orderProductService";
 import type { PaginationMeta } from "@/interfaces/PaginationMeta";
 import type { PaginationLinks } from "@/interfaces/PaginationLinks";
+import { extractErrorMessage } from "@/utils/external";
 
 export function useCompletedOrdersController() {
   const completed = ref<OrderHistory[]>([]);
@@ -20,9 +21,8 @@ export function useCompletedOrdersController() {
       completed.value = result.data;
       meta.value = result.meta;
       links.value = result.links;
-    } catch (err: any) {
-      error.value =
-        err.response?.data?.message || "Erro ao buscar pedidos finalizados.";
+    } catch (err: unknown) {
+       error.value = extractErrorMessage(err, 'Erro ao buscar pedidos finalizados.');
     } finally {
       isLoading.value = false;
     }

@@ -3,6 +3,7 @@ import type { Order } from "@/services/orderService";
 import { getOrder, postOrder } from "@/services/orderService";
 import type { OrderItem } from "@/interfaces/OrderItem";
 import { useCartStore } from "@/stores/cartStore";
+import { extractErrorMessage } from "@/utils/external";
 
 export function useOrderController() {
   const order = ref<Order | null>(null);
@@ -17,8 +18,8 @@ export function useOrderController() {
 
       const cart = useCartStore();
       cart.setFromApi(result.order_products);
-    } catch (err: any) {
-      error.value = err.response?.data?.message || "Erro ao carregar carrinho.";
+    } catch (err: unknown) { 
+      error.value = extractErrorMessage(err, "Erro ao carregar carrinho.");
     } finally {
       isLoading.value = false;
     }
@@ -27,8 +28,8 @@ export function useOrderController() {
   async function sendToCart(items: OrderItem[], clear = false) {
     try {
       order.value = await postOrder(items, clear);
-    } catch (err: any) {
-      console.error("Erro ao enviar pedido:", err);
+    } catch (err: unknown) {
+      error.value = extractErrorMessage(err, "Erro ao enviar pedido:");
       throw err;
     }
   }

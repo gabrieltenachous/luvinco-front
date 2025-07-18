@@ -1,3 +1,4 @@
+import type { AxiosError } from 'axios'
 import Swal from 'sweetalert2'
 
 export function showSuccess(title: string, message: string) {
@@ -22,6 +23,11 @@ export function showWarning(message: string) {
     title: 'Atenção',
     text: message,
   })
+}
+
+export function extractErrorMessage(err: unknown, fallback = 'Erro inesperado'): string {
+  const axiosError = err as AxiosError<{ message?: string }>
+  return axiosError.response?.data?.message || fallback
 }
 
 export function formatDateBrazil(dateString: string): string {

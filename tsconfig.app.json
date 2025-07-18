@@ -1,23 +1,22 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
-    /* Caminho base para os aliases */
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["DOM", "ES2015"],
     "baseUrl": ".",
-    "allowJs": true,
-    /* Aqui é onde o TS mapeia o @ para /src */
     "paths": {
       "@/*": ["src/*"]
     },
-
-    /* Linting */
+    "allowJs": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-
-  /* Faz o TS reconhecer arquivos .vue */
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue",  "src/env.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/env.d.ts"]
 }
